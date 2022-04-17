@@ -29,9 +29,8 @@ import com.se.besearchapp.request.ElasticReq;
 @Service
 public class ElasticSearchServiceImpl {
 
-	/*
-	 * @Autowired private RestHighLevelClient client;
-	 */
+	@Autowired
+	private RestHighLevelClient client;
 
 	@Value("${elasticsearch.domain}")
 	private String elasticSearchDomain;
@@ -48,43 +47,41 @@ public class ElasticSearchServiceImpl {
 	@Value("${elasticsearch.password}")
 	private String elasticSearchPassword;
 
-	public ApiRes<Object> initElasticSearch(ElasticReq req) throws Exception {
-		RestHighLevelClient client = new RestHighLevelClient(
-				RestClient.builder(new HttpHost(elasticSearchDomain, elasticSearchPort, elasticSearchProtocol)));
-		BulkRequest bulkReq = new BulkRequest();
-		String index = req.getIndex();
-		bulkReq.add(new IndexRequest("posts").id("1").source(XContentType.JSON, "field", "foo"));
-		bulkReq.add(new IndexRequest("posts").id("2").source(XContentType.JSON, "field", "bar"));
-		bulkReq.add(new IndexRequest("posts").id("3").source(XContentType.JSON, "field", "baz"));
-		client.bulk(bulkReq, RequestOptions.DEFAULT);
-		client.close();
-		return null;
-
-	}
-
 	/*
-	 * public ApiRes<Object> addIndex(ElasticReq req) throws IOException {
+	 * public ApiRes<Object> initElasticSearch(ElasticReq req) throws Exception {
+	 * RestHighLevelClient client = new RestHighLevelClient( RestClient.builder(new
+	 * HttpHost(elasticSearchDomain, elasticSearchPort, elasticSearchProtocol)));
+	 * BulkRequest bulkReq = new BulkRequest(); String index = req.getIndex();
+	 * bulkReq.add(new IndexRequest("posts").id("1").source(XContentType.JSON,
+	 * "field", "foo")); bulkReq.add(new
+	 * IndexRequest("posts").id("2").source(XContentType.JSON, "field", "bar"));
+	 * bulkReq.add(new IndexRequest("posts").id("3").source(XContentType.JSON,
+	 * "field", "baz")); client.bulk(bulkReq, RequestOptions.DEFAULT);
+	 * client.close(); return null;
 	 * 
-	 * ApiRes<Object> apiRes = new ApiRes<Object>(); try {
-	 * 
-	 * BulkRequest bulkReq = new BulkRequest(); String index = req.getIndex(); Gson
-	 * g = new Gson(); for (Object x : req.getDataSource()) { java.util.Map<String,
-	 * Object> map = (java.util.Map<String, Object>) g.fromJson(g.toJson(x),
-	 * Object.class); bulkReq.add( new
-	 * IndexRequest(index).id(map.get("id").toString()).source(g.toJson(x),
-	 * XContentType.JSON)); }
-	 * 
-	 * BulkRequest bulkReq = new BulkRequest(); bulkReq.add(new
-	 * IndexRequest("posts").id("1").source(XContentType.JSON, "field", "foo"));
-	 * bulkReq.add(new IndexRequest("posts").id("2").source(XContentType.JSON,
-	 * "field", "bar")); bulkReq.add(new
-	 * IndexRequest("posts").id("3").source(XContentType.JSON, "field", "baz"));
-	 * client.bulk(bulkReq, RequestOptions.DEFAULT); client.close();
-	 * 
-	 * } catch (Exception e) { apiRes.setError(true);
-	 * apiRes.setErrorReason(e.getMessage()); }
-	 * 
-	 * return apiRes; }
+	 * }
 	 */
+
+	public ApiRes<Object> addIndex(ElasticReq req) throws IOException {
+
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+		try {
+
+			BulkRequest bulkReq = new BulkRequest();
+			String index = req.getIndex();
+			Gson g = new Gson();
+			bulkReq.add(new IndexRequest("posts").id("1").source(XContentType.JSON, "field", "foo"));
+			bulkReq.add(new IndexRequest("posts").id("2").source(XContentType.JSON, "field", "bar"));
+			bulkReq.add(new IndexRequest("posts").id("3").source(XContentType.JSON, "field", "baz"));
+			client.bulk(bulkReq, RequestOptions.DEFAULT);
+			client.close();
+
+		} catch (Exception e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
+
+		return apiRes;
+	}
 
 }
