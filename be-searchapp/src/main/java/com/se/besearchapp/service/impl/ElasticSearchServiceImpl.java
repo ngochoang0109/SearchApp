@@ -65,22 +65,19 @@ public class ElasticSearchServiceImpl {
 	public ApiRes<Object> addIndex(ElasticReq req) throws IOException {
 
 		ApiRes<Object> apiRes = new ApiRes<Object>();
-		try {
+		/* try { */
 
 			BulkRequest bulkReq = new BulkRequest();
 			String index = req.getIndex();
 			Gson g = new Gson();
 			bulkReq.add(new IndexRequest("posts").id("1").source(XContentType.JSON, "field", "foo"));
-			bulkReq.add(new IndexRequest("posts").id("2").source(XContentType.JSON, "field", "bar"));
-			bulkReq.add(new IndexRequest("posts").id("3").source(XContentType.JSON, "field", "baz"));
 			client.bulk(bulkReq, RequestOptions.DEFAULT);
 			client.close();
 
-		} catch (Exception e) {
-			apiRes.setError(true);
-			apiRes.setErrorReason(e.getMessage());
-		}
-
+			/*
+			 * } catch (Exception e) { apiRes.setError(true);
+			 * apiRes.setErrorReason(e.getMessage()); }
+			 */
 		return apiRes;
 	}
 

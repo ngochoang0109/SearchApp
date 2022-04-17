@@ -27,6 +27,6 @@ public class ElasticSearchController {
 
 	@RequestMapping(value = "/addindex", method = RequestMethod.POST, consumes = "application/json", produces = "application/json; charset=utf-8")
 	public ResponseEntity<Object> getList(@RequestBody ElasticReq req) throws Exception {
-		return ResponseEntity.ok(objService.initElasticSearch(req));
+		return ResponseEntity.ok(objService.addIndex(req));
 	}
 }
