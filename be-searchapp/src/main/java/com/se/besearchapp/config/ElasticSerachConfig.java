@@ -74,12 +74,12 @@ public class ElasticSerachConfig {
 
 		final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 		credentialsProvider.setCredentials(AuthScope.ANY,
-				new UsernamePasswordCredentials("elastic", "gwHiN5yb4Rs6yP9KCU_U"));
+				new UsernamePasswordCredentials("elastic", "hoangtn@01"));
 
 		SSLContextBuilder sslBuilder = SSLContexts.custom().loadTrustMaterial(null, (x509Certificates, s) -> true);
 		final SSLContext sslContext = sslBuilder.build();
 		RestHighLevelClient client = new RestHighLevelClient(
-				RestClient.builder(new HttpHost(elasticSearchDomain, 9200, "https"))
+				RestClient.builder(new HttpHost("35.172.40.248", 9200, "https"))
 						.setHttpClientConfigCallback(new HttpClientConfigCallback() {
 							@Override
 							public HttpAsyncClientBuilder customizeHttpClient(

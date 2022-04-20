@@ -1,7 +1,5 @@
 package com.se.besearchapp.request;
 
-import java.util.List;
-
 import com.se.besearchapp.pojo.DataSource;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ElasticReq {
-	private String Index;
-	private List<DataSource> dataSource;
+public class ElasticDatasourceReq {
+	private String index;
+	private DataSource dataSource;
 }
