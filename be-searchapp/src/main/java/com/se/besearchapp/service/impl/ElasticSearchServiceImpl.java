@@ -6,6 +6,8 @@ import java.util.List;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -119,6 +121,20 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 //			apiRes.setError(true);
 //			apiRes.setErrorReason(e.getMessage());
 //		}
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> search(ElasticReq req) {
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+		try {
+			SearchRequest searchRequest = new SearchRequest("test026");
+			SearchResponse x = client.search(searchRequest, RequestOptions.DEFAULT);
+			apiRes.setObject(x);
+		} catch (IOException e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
 		return apiRes;
 	}
 
