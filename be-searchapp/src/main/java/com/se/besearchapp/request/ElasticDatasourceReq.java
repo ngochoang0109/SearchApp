@@ -14,4 +14,21 @@ import lombok.Setter;
 public class ElasticDatasourceReq {
 	private String index;
 	private DataSource dataSource;
+
+	public String getIndex() {
+		return index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
+	}
+
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 }
