@@ -20,8 +20,10 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.se.besearchapp.helpers.ApiRes;
 import com.se.besearchapp.pojo.DataSource;
+import com.se.besearchapp.request.DataSourceReq;
 import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.ElasticReq;
+import com.se.besearchapp.request.FilterReq;
 import com.se.besearchapp.service.ElasticSearchService;
 
 @Service
@@ -125,13 +127,13 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 	}
 
 	@Override
-	public ApiRes<Object> search(ElasticReq req) {
+	public ApiRes<Object> search(FilterReq req) {
 		ApiRes<Object> apiRes = new ApiRes<Object>();
 		try {
-			SearchRequest searchRequest = new SearchRequest("test026");
+			SearchRequest searchRequest = new SearchRequest(req.getIndex());
 			SearchResponse x = client.search(searchRequest, RequestOptions.DEFAULT);
 			apiRes.setObject(x);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			apiRes.setError(true);
 			apiRes.setErrorReason(e.getMessage());
 		}

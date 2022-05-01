@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.ElasticReq;
+import com.se.besearchapp.request.FilterReq;
 import com.se.besearchapp.service.ElasticSearchService;
 import com.se.besearchapp.service.impl.ElasticSearchServiceImpl;
 
@@ -50,7 +51,7 @@ public class ElasticSearchController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json", produces = "application/json; charset=utf-8")
-	public ResponseEntity<Object> searchs(@RequestBody(required = false) ElasticReq req) {
+	public ResponseEntity<Object> searchs(@RequestBody(required = false) FilterReq req) {
 		return ResponseEntity.ok(objService.search(req));
 	}
 }
