@@ -46,35 +46,13 @@ public class ElasticSerachConfig {
 	@Value("${elasticsearch.password}")
 	private String elasticSearchPassword;
 
-	/*
-	 * @Bean public RestHighLevelClient elasticsearchClient() { final
-	 * CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-	 * credentialsProvider.setCredentials(AuthScope.ANY, new
-	 * UsernamePasswordCredentials("phunghx", "phapnv01")); RestHighLevelClient
-	 * client = new RestHighLevelClient( RestClient.builder(new
-	 * HttpHost(elasticSearchDomain, elasticSearchPort, elasticSearchProtocol))
-	 * 
-	 * .setRequestConfigCallback(new RequestConfigCallback() {
-	 * 
-	 * @Override public Builder customizeRequestConfig(Builder requestConfigBuilder)
-	 * { requestConfigBuilder.setConnectTimeout(3000);
-	 * requestConfigBuilder.setSocketTimeout(60000); return requestConfigBuilder; }
-	 * }).setHttpClientConfigCallback(new
-	 * RestClientBuilder.HttpClientConfigCallback() {
-	 * 
-	 * @Override public HttpAsyncClientBuilder customizeHttpClient(
-	 * HttpAsyncClientBuilder httpClientBuilder) { return
-	 * httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider); }
-	 * 
-	 * })); return client; }
-	 */
 
 	@Bean
 	public RestHighLevelClient createSimpleElasticClient() throws Exception {
 
 		final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 		credentialsProvider.setCredentials(AuthScope.ANY,
-				new UsernamePasswordCredentials("elastic", "FrQ51=HhT53K=2PsOons"));
+				new UsernamePasswordCredentials("phunghx", "hoangtn@01"));
 
 		SSLContextBuilder sslBuilder = SSLContexts.custom().loadTrustMaterial(null, (x509Certificates, s) -> true);
 		final SSLContext sslContext = sslBuilder.build();
