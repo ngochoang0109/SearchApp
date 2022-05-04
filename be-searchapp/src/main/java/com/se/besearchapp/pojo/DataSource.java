@@ -11,9 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DataSource {
 	private long id;
-	private String title;
-	private String content;
-	private String keyword;
+	private Object data;
 
 	public long getId() {
 		return id;
@@ -23,28 +21,12 @@ public class DataSource {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public Object getData() {
+		return data;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getKeyword() {
-		return keyword;
-	}
-
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setData(Object data) {
+		this.data = data;
 	}
 
 }
