@@ -22,16 +22,18 @@ import com.se.besearchapp.helpers.ApiRes;
 import com.se.besearchapp.helpers.ConvertHelper;
 import com.se.besearchapp.repo.ArticleRepository;
 import com.se.besearchapp.request.ArticleElasticReq;
+import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.FilterReq;
+import com.se.besearchapp.service.ArticleService;
 
 @Service
-public class ArticleServiceImpl {
+public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	ArticleRepository articleRepository;
 	@Autowired
 	private RestHighLevelClient client;
 
-	public ApiRes<Object> saveMulDatasource(ArticleElasticReq req) {
+	public ApiRes<Object> saveMulArticle(ArticleElasticReq req) {
 
 		ApiRes<Object> apiRes = new ApiRes<Object>();
 
@@ -52,6 +54,62 @@ public class ArticleServiceImpl {
 			apiRes.setErrorReason(e.getMessage());
 		}
 
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> saveSingleArticle(ElasticDatasourceReq req) {
+
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+
+		try {
+			BulkRequest bulkReq = new BulkRequest();
+			String index = req.getIndex();
+			Gson g = new Gson();
+			bulkReq.add(new IndexRequest(index).id(String.valueOf(req.getDataSource().getId()))
+					.source(g.toJson(req.getDataSource()), XContentType.JSON));
+			client.bulk(bulkReq, RequestOptions.DEFAULT);
+
+		} catch (Exception e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
+
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> deleteSingleArticle(String index, long id) {
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+
+		try {
+			client.delete(new DeleteRequest(index, String.valueOf(id)), RequestOptions.DEFAULT);
+
+		} catch (Exception e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
+
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> deleteMulArticleFromIndex(String index, List<Integer> ids) {
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+		try {
+			if (ids != null && !ids.isEmpty()) {
+				BulkRequest bulkReq = new BulkRequest();
+				for (Integer id : ids) {
+					bulkReq.add(new DeleteRequest(index).id(String.valueOf(id)));
+					client.bulk(bulkReq, RequestOptions.DEFAULT);
+				}
+			} else {
+				apiRes.setErrorReason("List id not empty");
+			}
+		} catch (IOException e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
 		return apiRes;
 	}
 
@@ -109,6 +167,12 @@ public class ArticleServiceImpl {
 			apiRes.setErrorReason(e.getMessage());
 		}
 		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> deleteAllArticleFromIndex(String index) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

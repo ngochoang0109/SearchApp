@@ -1,6 +1,8 @@
 package com.se.besearchapp.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -13,16 +15,24 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.se.besearchapp.helpers.ApiRes;
 import com.se.besearchapp.pojo.DataSource;
-import com.se.besearchapp.request.DataSourceReq;
 import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.ElasticReq;
+import com.se.besearchapp.request.FilterParam;
 import com.se.besearchapp.request.FilterReq;
 import com.se.besearchapp.service.ElasticSearchService;
 
@@ -33,15 +43,11 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 	private RestHighLevelClient client;
 
 	public ApiRes<Object> saveMulDatasource(ElasticReq req) {
-
 		ApiRes<Object> apiRes = new ApiRes<Object>();
-
 		try {
-
 			BulkRequest bulkReq = new BulkRequest();
 			String index = req.getIndex();
 			Gson g = new Gson();
-
 			for (DataSource dataSource : req.getDataSource()) {
 				bulkReq.add(new IndexRequest(index).id(String.valueOf(dataSource.getId())).source(g.toJson(dataSource),
 						XContentType.JSON));
@@ -49,10 +55,9 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			client.bulk(bulkReq, RequestOptions.DEFAULT);
 
 		} catch (Exception e) {
-			apiRes.setError(true);
-			apiRes.setErrorReason(e.getMessage());
-		}
 
+		}
+		apiRes.setObject(true);
 		return apiRes;
 	}
 
@@ -70,8 +75,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			client.bulk(bulkReq, RequestOptions.DEFAULT);
 
 		} catch (Exception e) {
-			apiRes.setError(true);
-			apiRes.setErrorReason(e.getMessage());
+			
 		}
 
 		return apiRes;
@@ -85,8 +89,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			client.delete(new DeleteRequest(index, String.valueOf(id)), RequestOptions.DEFAULT);
 
 		} catch (Exception e) {
-			apiRes.setError(true);
-			apiRes.setErrorReason(e.getMessage());
+			
 		}
 
 		return apiRes;
@@ -106,8 +109,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 				apiRes.setErrorReason("List id not empty");
 			}
 		} catch (IOException e) {
-			apiRes.setError(true);
-			apiRes.setErrorReason(e.getMessage());
+			
 		}
 		return apiRes;
 	}
@@ -130,9 +132,51 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 	public ApiRes<Object> search(FilterReq req) {
 		ApiRes<Object> apiRes = new ApiRes<Object>();
 		try {
+			List<Object> result = new ArrayList<Object>();
+
 			SearchRequest searchRequest = new SearchRequest(req.getIndex());
-			SearchResponse x = client.search(searchRequest, RequestOptions.DEFAULT);
-			apiRes.setObject(x);
+			SearchResponse res;
+			SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+			if (req.getKeyword() == null || req.getKeyword().equals("")) {
+				res = client.search(searchRequest, RequestOptions.DEFAULT);
+			} else {
+				List<MultiMatchQueryBuilder> multiMatchQueryBuilders = new ArrayList<MultiMatchQueryBuilder>();
+				for (FilterParam obj : req.getFilterParams()) {
+					MultiMatchQueryBuilder q1 = QueryBuilders.multiMatchQuery(req.getKeyword(),
+							new String[] { obj.getKey() });
+					q1.type(q1.type().PHRASE_PREFIX);
+
+					multiMatchQueryBuilders.add(q1);
+				}
+
+				BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+				for (MultiMatchQueryBuilder obj : multiMatchQueryBuilders) {
+					boolQueryBuilder.should(obj);
+				}
+				QueryBuilder boolQuery = boolQueryBuilder;
+				sourceBuilder.query(boolQuery);
+
+				searchRequest.source(sourceBuilder);
+				res = client.search(searchRequest, RequestOptions.DEFAULT);
+			}
+
+			SearchHits hits = res.getHits();
+			SearchHit[] searchHits = hits.getHits();
+			Gson g = new Gson();
+			for (SearchHit hit : searchHits) {
+				ObjectMapper o = new ObjectMapper();
+				java.util.Map<String, Object> map = hit.getSourceAsMap();
+				java.util.Map<String, Object> map2 = new HashMap();
+				map.forEach((k, v) -> {
+					if (!k.equals("NameUtf8"))
+						map2.put(Character.toLowerCase(k.charAt(0)) + k.substring(1), v);
+				});
+				Object e = o.readValue(g.toJson(map2), Object.class);
+				result.add(e);
+
+			}
+			/* client.close(); */
+			apiRes.setObject(result);
 		} catch (Exception e) {
 			apiRes.setError(true);
 			apiRes.setErrorReason(e.getMessage());
