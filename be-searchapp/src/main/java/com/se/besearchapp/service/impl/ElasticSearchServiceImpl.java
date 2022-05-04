@@ -132,7 +132,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 		try {
 			SearchRequest searchRequest = new SearchRequest(req.getIndex());
 			SearchResponse x = client.search(searchRequest, RequestOptions.DEFAULT);
-			apiRes.setObject(x);
+			apiRes.setObject(x.getHits().getHits());
 		} catch (Exception e) {
 			apiRes.setError(true);
 			apiRes.setErrorReason(e.getMessage());

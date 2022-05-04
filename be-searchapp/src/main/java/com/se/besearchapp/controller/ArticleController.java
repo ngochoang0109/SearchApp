@@ -1,26 +1,17 @@
 
 package com.se.besearchapp.controller;
 
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.se.besearchapp.entities.Article;
 import com.se.besearchapp.request.ArticleElasticReq;
-import com.se.besearchapp.request.ArticleReq;
-import com.se.besearchapp.request.ElasticDatasourceReq;
-import com.se.besearchapp.request.ElasticReq;
 import com.se.besearchapp.request.FilterReq;
-import com.se.besearchapp.service.ElasticSearchService;
 import com.se.besearchapp.service.impl.ArticleServiceImpl;
-import com.se.besearchapp.service.impl.ElasticSearchServiceImpl;
 
 @RestController
 
