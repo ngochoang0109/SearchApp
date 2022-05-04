@@ -1,17 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>React App</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <script src="./js/jquery.min.js"></script>
+  <script src="./js/popper.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/main.js"></script>
+  <style type="text/css">
+    #search-box {
+      position: relative;
+      width: 100%;
+      margin: 0;
+    }
+
+    #search-form {
+      height: 40px;
+      border: 1px solid #999;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      background-color: #fff;
+      overflow: hidden;
+    }
+
+    #search-text {
+      font-size: 14px;
+      color: #ddd;
+      border-width: 0;
+      background: transparent;
+      padding-right: 5px;
+    }
+
+    #search-box input[type="text"] {
+      width: 90%;
+      padding: 11px 0 12px 1em;
+      color: #333;
+      outline: none;
+    }
+
+    #search-button {
+      padding-left: 5px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 42px;
+      width: 80px;
+      font-size: 14px;
+      color: #fff;
+      text-align: center;
+      line-height: 42px;
+      border-width: 0;
+      background-color: #20B2AA;
+      -webkit-border-radius: 0px 5px 5px 0px;
+      -moz-border-radius: 0px 5px 5px 0px;
+      border-radius: 0px 5px 5px 0px;
+      cursor: pointer;
+    }
+
+    .form-check input {
+      width: 20px;
+      height: 48px;
+      border: 2px solid #CACACA;
+      background-color: #FFFFFF;
+      border-radius: 8px 8px 8px 8px;
+      margin-bottom: 1rem;
+    }
+
+    .form-check {
+      display: flex;
+      flex-direction: row;
+      
+    }
+  </style>
+</body>
+
 </html>
