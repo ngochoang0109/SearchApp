@@ -7,11 +7,7 @@ const documentReducer=(state=initialState, action)=>{
         case documentConstant.GET_DOCUMENT:
             return action.data;
         case documentConstant.GET_ALL_OF_INDEX:
-            const data=action.data.object;
-            const result=data.map((item, index)=>{
-                return item.sourceAsMap;
-            })
-            return result;
+            return action.data;
         default:
             return state;
     }

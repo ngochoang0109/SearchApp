@@ -27,7 +27,6 @@ const Search = () => {
                         <th>id</th>
                         <th>title</th>
                         <th>content</th>
-                        <th>keyword</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,11 +38,10 @@ const Search = () => {
 
     const showData = () => {
         return data.map((item) => {
-            return <tr>
+            return <tr key={item.id}>
                 <td>{item.id}</td>
-                <td>{item.title}</td>
-                <td>{item.keyword}</td>
-                <td>{item.content}</td>
+                <td>{item.data.title}</td>
+                <td>{item.data.content}</td>
             </tr>
         })
     }

@@ -2,8 +2,19 @@ import { documentConstant } from "../constant/documentConstant";
 import { documentService } from "../service/documentService";
 
 const addDocument = (data) => {
+    
+    const request=data.dataSource.map((item, index)=>{
+        return {
+            id:item.id,
+            data:{
+                title:item.title,
+                content:item.content
+            }
+        }
+    })
+    
     return (dispatch) => {
-        return documentService.addDocument(data)
+        return documentService.addDocument({index:data.index, dataSource:request})
             .then((response) => {
                 return (dispatch({
                     type: documentConstant.ADD_DOCUMENT,
@@ -26,7 +37,7 @@ const getAllOfIndex = (data) => {
                 console.log(response.data);
                 return (dispatch({
                     type: documentConstant.GET_ALL_OF_INDEX,
-                    data: response.data
+                    data: response.data.object
                 }))
             })
     }
