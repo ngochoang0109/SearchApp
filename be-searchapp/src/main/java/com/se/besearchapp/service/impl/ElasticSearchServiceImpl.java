@@ -1,10 +1,14 @@
 package com.se.besearchapp.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -14,6 +18,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -29,6 +35,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.se.besearchapp.helpers.ApiRes;
+import com.se.besearchapp.helpers.ImportJsonReq;
 import com.se.besearchapp.pojo.DataSource;
 import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.ElasticReq;
@@ -75,7 +82,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			client.bulk(bulkReq, RequestOptions.DEFAULT);
 
 		} catch (Exception e) {
-			
+
 		}
 
 		return apiRes;
@@ -89,7 +96,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			client.delete(new DeleteRequest(index, String.valueOf(id)), RequestOptions.DEFAULT);
 
 		} catch (Exception e) {
-			
+
 		}
 
 		return apiRes;
@@ -109,7 +116,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 				apiRes.setErrorReason("List id not empty");
 			}
 		} catch (IOException e) {
-			
+
 		}
 		return apiRes;
 	}
@@ -177,6 +184,42 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			}
 			/* client.close(); */
 			apiRes.setObject(result);
+		} catch (Exception e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> importjson(ImportJsonReq req) {
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+		try {
+			int x = 1;
+			List<Object> lstimportObject = new ObjectMapper().readValue(req.getFile().getBytes(), List.class);
+			BulkRequest bulkReq = new BulkRequest();
+			String index = req.getIndex();
+			Gson g = new Gson();
+			for (int i = 0; i < lstimportObject.size(); i++) {
+				bulkReq.add(new IndexRequest(index).id(String.valueOf(i + 1)).source(g.toJson(lstimportObject.get(i)),
+						XContentType.JSON));
+			}
+			client.bulk(bulkReq, RequestOptions.DEFAULT);
+
+		} catch (Exception e) {
+
+		}
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> getindex() {
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+		try {
+			GetIndexRequest request = new GetIndexRequest("*");
+			GetIndexResponse response = client.indices().get(request, RequestOptions.DEFAULT);
+			String[] indices = response.getIndices();
+			apiRes.setObject(indices);
 		} catch (Exception e) {
 			apiRes.setError(true);
 			apiRes.setErrorReason(e.getMessage());

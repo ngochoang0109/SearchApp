@@ -3,6 +3,7 @@ package com.se.besearchapp.service;
 import java.util.List;
 
 import com.se.besearchapp.helpers.ApiRes;
+import com.se.besearchapp.helpers.ImportJsonReq;
 import com.se.besearchapp.request.DataSourceReq;
 import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.ElasticReq;
@@ -10,6 +11,10 @@ import com.se.besearchapp.request.FilterReq;
 
 public interface ElasticSearchService {
 	ApiRes<Object> saveMulDatasource(ElasticReq req);
+
+	ApiRes<Object> importjson(ImportJsonReq req);
+
+	ApiRes<Object> getindex();
 
 	ApiRes<Object> saveSingleDatasource(ElasticDatasourceReq req);
 
