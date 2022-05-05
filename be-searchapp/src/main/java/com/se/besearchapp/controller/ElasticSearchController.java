@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.se.besearchapp.helpers.ImportJsonReq;
 import com.se.besearchapp.request.ElasticDatasourceReq;
 import com.se.besearchapp.request.ElasticReq;
 import com.se.besearchapp.request.FilterReq;
@@ -28,9 +29,19 @@ public class ElasticSearchController {
 	@Autowired
 	private ElasticSearchService objService;
 
+	@RequestMapping(value = "/import", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	public ResponseEntity<Object> update(ImportJsonReq req) throws Exception {
+		return ResponseEntity.ok(objService.importjson(req));
+	}
+
 	@RequestMapping(value = "/add-document", method = RequestMethod.POST, consumes = "application/json", produces = "application/json; charset=utf-8")
 	public ResponseEntity<Object> addDocuments(@RequestBody(required = false) ElasticReq req) {
 		return ResponseEntity.ok(objService.saveMulDatasource(req));
+	}
+
+	@RequestMapping(value = "/getindex", method = RequestMethod.POST, consumes = "application/json", produces = "application/json; charset=utf-8")
+	public ResponseEntity<Object> GetIndexes() {
+		return ResponseEntity.ok(objService.getindex());
 	}
 
 	@RequestMapping(value = "/edit-document/{index}/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json; charset=utf-8")
