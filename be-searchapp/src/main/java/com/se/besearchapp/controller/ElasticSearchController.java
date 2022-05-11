@@ -31,6 +31,7 @@ public class ElasticSearchController {
 
 	@RequestMapping(value = "/import", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public ResponseEntity<Object> update(ImportJsonReq req) throws Exception {
+		String xStrin="";
 		return ResponseEntity.ok(objService.importjson(req));
 	}
 

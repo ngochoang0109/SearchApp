@@ -26,6 +26,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+
 @Configuration
 @EnableElasticsearchRepositories(basePackages = { "com.se.besearchapp.repository" })
 @ComponentScan(basePackages = { "com.se.besearchapp" })
@@ -98,5 +103,6 @@ public class ElasticSerachConfig {
 		System.out.println("elasticsearch client created");
 		return client;
 	}
+
 
 }
