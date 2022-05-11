@@ -16,6 +16,8 @@ public interface ElasticSearchService {
 
 	ApiRes<Object> getindex();
 
+	ApiRes<Object> getlabel(ElasticReq req);
+
 	ApiRes<Object> saveSingleDatasource(ElasticDatasourceReq req);
 
 	ApiRes<Object> deleteSingleDatasource(String index, long id);

@@ -23,7 +23,6 @@ import com.se.besearchapp.service.impl.ElasticSearchServiceImpl;
 @RestController
 
 @RequestMapping("/api/elastic")
-@CrossOrigin("http://localhost:3000")
 public class ElasticSearchController {
 
 	@Autowired
@@ -43,6 +42,11 @@ public class ElasticSearchController {
 	@RequestMapping(value = "/getindex", method = RequestMethod.POST, consumes = "application/json", produces = "application/json; charset=utf-8")
 	public ResponseEntity<Object> GetIndexes() {
 		return ResponseEntity.ok(objService.getindex());
+	}
+
+	@RequestMapping(value = "/getlabel", method = RequestMethod.POST, consumes = "application/json", produces = "application/json; charset=utf-8")
+	public ResponseEntity<Object> GetLabels(@RequestBody(required = false) ElasticReq req) {
+		return ResponseEntity.ok(objService.getlabel(req));
 	}
 
 	@RequestMapping(value = "/edit-document/{index}/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json; charset=utf-8")
