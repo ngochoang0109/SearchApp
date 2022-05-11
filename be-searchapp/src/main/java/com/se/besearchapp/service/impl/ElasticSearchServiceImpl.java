@@ -9,6 +9,10 @@ import java.util.Set;
 
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsRequest;
+import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsResponse;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequest;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -220,6 +224,27 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 			GetIndexResponse response = client.indices().get(request, RequestOptions.DEFAULT);
 			String[] indices = response.getIndices();
 			apiRes.setObject(indices);
+		} catch (Exception e) {
+			apiRes.setError(true);
+			apiRes.setErrorReason(e.getMessage());
+		}
+		return apiRes;
+	}
+
+	@Override
+	public ApiRes<Object> getlabel(ElasticReq req) {
+		ApiRes<Object> apiRes = new ApiRes<Object>();
+		try {
+			SearchRequest searchRequest = new SearchRequest(req.getIndex());
+			SearchResponse res;
+			res = client.search(searchRequest, RequestOptions.DEFAULT);
+			SearchHits hits = res.getHits();
+			SearchHit[] searchHits = hits.getHits();
+			Gson g = new Gson();
+			SearchHit hit = searchHits[0];
+			java.util.Map<String, Object> map = hit.getSourceAsMap();
+			List<String> lstkey = new ArrayList<String>(map.keySet());
+			apiRes.setObject(lstkey);
 		} catch (Exception e) {
 			apiRes.setError(true);
 			apiRes.setErrorReason(e.getMessage());
